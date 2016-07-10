@@ -17,4 +17,6 @@ For personal use, buggy script, to install open_gapps-arm64-5.1-pico-20160207 to
 
 8 adb shell; su; sh installer2 (everytime)
 
+9 reboot mobile (everytime)
+
 Will never buy xiaomi's mobile again.
