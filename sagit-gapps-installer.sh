@@ -21,6 +21,12 @@ set_perm_recursive() {
 install_busybox() {
   cp busybox-arm /system/xbin
   chmod 0755 /system/xbin/busybox-arm
+  cp tar-arm /system/xbin
+  chmod 0755 /system/xbin/tar-arm
+  cp unzip-arm /system/xbin
+  chmod 0755 /system/xbin/unzip-arm
+  cp zip-arm /system/xbin
+  chmod 0755 /system/xbin/zip-arm
 }
 
 # filepath target
@@ -31,16 +37,16 @@ folder_extract() {
   pkg=$(echo $1 | awk '{print substr($1, 0, index($1,".")-1)}')
   pkg=$(echo $pkg | awk '{print substr($1,index($1,"/")+1)}')
   echo "$1 $pkg => $2"
-  busybox-arm tar -xyf "$1" -C "$2" "$pkg/common";
-  busybox-arm tar -xyf "$1" -C "$2" "$pkg/nodpi";
-  busybox-arm tar -xyf "$1" -C "$2" "$pkg/240-320-480";
+  busybox-arm tar -xf "$1" -C "$2" "$pkg/common";
+  busybox-arm tar -xf "$1" -C "$2" "$pkg/nodpi";
+  busybox-arm tar -xf "$1" -C "$2" "$pkg/240-320-480";
   #tar -xJf "$1" -C "$2" "$pkg/common";
   #tar -xJf "$1" -C "$2" "$pkg/nodpi";
   #cp -rvf /sdcard/open_gapps-arm64-5.1-pico-20160721/$2/. /system/;
   if [ -d "$2/$pkg/common" ]; then
     cp -rvf "$2/$pkg/common/." /system/
   fi
-  if [ -d "$2/$pkg/noapi" ]; then
+  if [ -d "$2/$pkg/nodpi" ]; then
     cp -rvf "$2/$pkg/nodpi/." /system/
   fi
   if [ -d "$2/$pkg/240-320-480" ]; then
