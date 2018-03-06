@@ -43,6 +43,7 @@ folder_extract() {
   #tar -xJf "$1" -C "$2" "$pkg/common";
   #tar -xJf "$1" -C "$2" "$pkg/nodpi";
   #cp -rvf /sdcard/open_gapps-arm64-5.1-pico-20160721/$2/. /system/;
+  # install -m 644 src dest
   if [ -d "$2/$pkg/common" ]; then
     cp -rvf "$2/$pkg/common/." /system/
   fi
@@ -57,9 +58,23 @@ folder_extract() {
 #/sdcard/open_gapps-arm64-5.1-pico-20160207/configupdater/nodpi/. -> /system/.
 #/sdcard/open_gapps-arm64-5.1-pico-20160207/configupdater/nodpi/./priv-app -> /system/./priv-app
 fix_gapps() {
-    find /system/vendor/pittpatt -type d -exec chown 0:2000 '{}' \;
-    set_perm_recursive 0 0 755 644 "/system/app" "/system/framework" "/system/lib" "/system/lib64" "/system/priv-app" "/system/usr/srec" "/system/vendor/pittpatt" "/system/etc/permissions" "/system/etc/preferred-apps";
-    ch_con_recursive "/system/app" "/system/framework" "/system/lib" "/system/lib64" "/system/priv-app" "/system/usr/srec" "/system/vendor/pittpatt" "/system/etc/permissions" "/system/etc/preferred-apps" "/system/addon.d";
+    # find /system/vendor/pittpatt -type d -exec chown 0:2000 '{}' \;
+    # set_perm_recursive 0 0 755 644 "/system/app" "/system/framework" "/system/lib" "/system/lib64" "/system/priv-app" "/system/usr/srec" "/system/vendor/pittpatt" "/system/etc/permissions" "/system/etc/preferred-apps";
+    # ch_con_recursive "/system/app" "/system/framework" "/system/lib" "/system/lib64" "/system/priv-app" "/system/usr/srec" "/system/vendor/pittpatt" "/system/etc/permissions" "/system/etc/preferred-apps" "/system/addon.d";
+}
+
+others() {
+  SYSTEM=/system
+  g_prop=$SYSTEM/etc/g.prop
+sed -i "s/ro.error.receiver.system.apps=.*/ro.error.receiver.system.apps=com.google.android.gms/g" $SYSTEM/build.prop
+sed -i "\:# Apply build.prop changes (from GApps Installer):a \    sed -i \"s/ro.error.receiver.system.apps=.*/ro.error.receiver.system.apps=com.google.android.gms/g\" $SYSTEM/build.prop" $bkup_tail
+}
+
+fix_permissions() {
+  find /system/priv-app/ -name '*.apk' -perm 660 -print -exec chmod 0644 '{}' \;
+  find /system/app/ -name '*.apk' -perm 660 -print -exec chmod 0644 '{}' \;
+  find /system/priv-app/ -type d -perm 771 -print -exec chmod 0755 '{}' \;
+  find /system/app/ -type d -perm 771 -print -exec chmod 0755 '{}' \;
 }
 
 pkg_path=`pwd`
@@ -78,5 +93,6 @@ for f in $(ls GApps); do
     folder_extract "GApps/$f" $tmp_path
 done;
 fix_gapps
+fix_permissions
 mount -o ro,remount /system
 #rm -rf $tmp_path/*
