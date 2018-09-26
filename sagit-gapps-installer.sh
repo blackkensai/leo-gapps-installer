@@ -75,6 +75,16 @@ fix_permissions() {
   find /system/app/ -name '*.apk' -perm 660 -print -exec chmod 0644 '{}' \;
   find /system/priv-app/ -type d -perm 771 -print -exec chmod 0755 '{}' \;
   find /system/app/ -type d -perm 771 -print -exec chmod 0755 '{}' \;
+  find /system/etc/permissions/ -name '*.xml' -perm 660 -print -exec chmod 0644 '{}' \;
+  find /system/lib -name '*.so' -perm 660 -print -exec chmod 0644 '{}' \;
+  find /system/lib64 -name '*.so' -perm 660 -print -exec chmod 0644 '{}' \;
+  find /system/etc/sysconfig/ -name '*.xml' -perm 660 -print -exec chmod 0644 '{}' \;
+  find /system/framework/ -name '*.jar' -perm 660 -print -exec chmod 0644 '{}' \;
+  find /system/etc/default-permissions/ -name '*.xml' -perm 660 -print -exec chmod 0644 '{}' \;
+  find /system/etc/preferred-apps -name '*.xml' -perm 660 -print -exec chmod 0644 '{}' \;
+  find /system/etc/ -type d -perm 771 -print -exec chmod 0755 '{}' \;
+  find /system/usr/ -type d -perm 771 -print -exec chmod 0755 '{}' \;
+  find /system/usr/srec/en-US -name '*' -perm 660 -print -exec chmod 0644 '{}' \;
 }
 
 pkg_path=`pwd`
