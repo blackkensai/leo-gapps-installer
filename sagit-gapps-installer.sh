@@ -37,26 +37,32 @@ folder_extract() {
   pkg=$(echo $1 | awk '{print substr($1, 0, index($1,".")-1)}')
   pkg=$(echo $pkg | awk '{print substr($1,index($1,"/")+1)}')
   echo "$1 $pkg => $2"
-  busybox-arm tar -xf "$1" -C "$2" "$pkg/common";
-  busybox-arm tar -xf "$1" -C "$2" "$pkg/nodpi";
-  busybox-arm tar -xf "$1" -C "$2" "$pkg/240-320-480";
-  busybox-arm tar -xf "$1" -C "$2" "$pkg/480";
+  for folder in $(busybox-arm tar -tf "$1" | busybox-arm grep -E '^[^/]+/[^/]+/$' | awk -F '/' '{print $2}'); do
+    busybox-arm tar -xf "$1" -C "$2" "$pkg/$folder";
+    if [ -d "$2/$pkg/$folder" ]; then
+      cp -rvf "$2/$pkg/$folder/." /system/
+    fi
+  done
+  # busybox-arm tar -xf "$1" -C "$2" "$pkg/common";
+  # busybox-arm tar -xf "$1" -C "$2" "$pkg/nodpi";
+  # busybox-arm tar -xf "$1" -C "$2" "$pkg/240-320-480";
+  # busybox-arm tar -xf "$1" -C "$2" "$pkg/480";
   #tar -xJf "$1" -C "$2" "$pkg/common";
   #tar -xJf "$1" -C "$2" "$pkg/nodpi";
   #cp -rvf /sdcard/open_gapps-arm64-5.1-pico-20160721/$2/. /system/;
   # install -m 644 src dest
-  if [ -d "$2/$pkg/common" ]; then
-    cp -rvf "$2/$pkg/common/." /system/
-  fi
-  if [ -d "$2/$pkg/nodpi" ]; then
-    cp -rvf "$2/$pkg/nodpi/." /system/
-  fi
-  if [ -d "$2/$pkg/240-320-480" ]; then
-    cp -rvf "$2/$pkg/240-320-480/." /system/
-  fi
-  if [ -d "$2/$pkg/480" ]; then
-    cp -rvf "$2/$pkg/480/." /system/
-  fi
+  # if [ -d "$2/$pkg/common" ]; then
+  #   cp -rvf "$2/$pkg/common/." /system/
+  # fi
+  # if [ -d "$2/$pkg/nodpi" ]; then
+  #   cp -rvf "$2/$pkg/nodpi/." /system/
+  # fi
+  # if [ -d "$2/$pkg/240-320-480" ]; then
+  #   cp -rvf "$2/$pkg/240-320-480/." /system/
+  # fi
+  # if [ -d "$2/$pkg/480" ]; then
+  #   cp -rvf "$2/$pkg/480/." /system/
+  # fi
 }
 
 #/sdcard/open_gapps-arm64-5.1-pico-20160207/configupdater/nodpi/. -> /system/.
