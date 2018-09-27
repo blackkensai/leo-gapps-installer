@@ -40,6 +40,7 @@ folder_extract() {
   busybox-arm tar -xf "$1" -C "$2" "$pkg/common";
   busybox-arm tar -xf "$1" -C "$2" "$pkg/nodpi";
   busybox-arm tar -xf "$1" -C "$2" "$pkg/240-320-480";
+  busybox-arm tar -xf "$1" -C "$2" "$pkg/480";
   #tar -xJf "$1" -C "$2" "$pkg/common";
   #tar -xJf "$1" -C "$2" "$pkg/nodpi";
   #cp -rvf /sdcard/open_gapps-arm64-5.1-pico-20160721/$2/. /system/;
@@ -52,6 +53,9 @@ folder_extract() {
   fi
   if [ -d "$2/$pkg/240-320-480" ]; then
     cp -rvf "$2/$pkg/240-320-480/." /system/
+  fi
+  if [ -d "$2/$pkg/480" ]; then
+    cp -rvf "$2/$pkg/480/." /system/
   fi
 }
 
@@ -95,7 +99,7 @@ mkdir $tmp_path
 
 mount -o rw,remount /system
 install_busybox
-ll $tmp_path
+ls -l $tmp_path
 for f in $(ls Core); do
     folder_extract "Core/$f" $tmp_path
 done;
